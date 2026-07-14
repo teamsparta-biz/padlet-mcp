@@ -32,32 +32,25 @@ pip install --user --upgrade git+https://github.com/teamsparta-biz/padlet-mcp
 이 프로젝트는 회사 공용 Padlet biz 계정을 사용하며, **그 계정에는 API 키가 하나뿐**이다 (Padlet biz 플랜은 계정당 키 1개만 지원 — 개인별로 새로 발급받는 개념이 아니다). 그래서:
 
 1. 공용 biz 계정으로 로그인해서 https://padlet.com/settings/api 에서 키 값을 직접 복사한다 — 계정당 키가 하나뿐이라 새로 만드는 게 아니라 이미 있는 값을 그대로 복사하는 것. 이메일/공개 채널/이 저장소의 커밋 등에는 절대 올리지 말 것 — 팀 전체가 공유하는 유일한 키라 유출되면 전원 영향을 받는다.
-2. 받은 키를 아래 둘 중 하나로 저장 (파일 방식을 권장 — 터미널을 새로 열어도 유지됨):
+2. 복사한 키를 `~/.secrets/padlet_api_key.txt` 파일에 저장한다.
 
-   **방법 A: 파일에 저장 (권장)**
+   가장 쉬운 방법은 Claude Code한테 키 값을 그대로 던져주고 "이 키로 padlet_api_key.txt 만들어줘" 하고 시키는 것 — 터미널 명령어를 직접 칠 필요 없이 알아서 파일을 만들어 저장해준다.
+
+   직접 터미널에서 하고 싶다면:
 
    Windows (PowerShell):
    ```powershell
    New-Item -ItemType Directory -Force -Path "$HOME\.secrets" | Out-Null
-   Set-Content -Path "$HOME\.secrets\padlet_api_key.txt" -Value "<전달받은 키>" -NoNewline
+   Set-Content -Path "$HOME\.secrets\padlet_api_key.txt" -Value "<복사한 키>" -NoNewline
    ```
 
    macOS / Linux:
    ```bash
    mkdir -p ~/.secrets
-   printf '%s' '<전달받은 키>' > ~/.secrets/padlet_api_key.txt
+   printf '%s' '<복사한 키>' > ~/.secrets/padlet_api_key.txt
    ```
 
    저장 경로를 바꾸고 싶으면 환경변수 `PADLET_API_KEY_FILE`로 다른 경로를 지정하면 된다.
-
-   **방법 B: 환경변수로 직접 설정**
-
-   Windows (PowerShell, 현재 세션에만 적용):
-   ```powershell
-   $env:PADLET_API_KEY = "<전달받은 키>"
-   ```
-
-   영구적으로 적용하려면 [시스템 환경 변수 편집]에 `PADLET_API_KEY`를 추가하거나, macOS/Linux는 `~/.bashrc`/`~/.zshrc`에 `export PADLET_API_KEY=...`를 추가.
 
 키가 없으면 서버 실행 시 바로 에러가 나며 어디에 저장하면 되는지 메시지로 안내한다.
 
