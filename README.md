@@ -25,34 +25,11 @@ pip install --user git+https://github.com/teamsparta-biz/padlet-mcp
 pip install --user --upgrade git+https://github.com/teamsparta-biz/padlet-mcp
 ```
 
-## 2. API 키 설정
+## 2. API 키 받기
 
-읽기 전용(list_boards/get_board만 있음)이어도 API 키는 반드시 필요하다 — Padlet API는 GET 요청에도 `x-api-key` 헤더 없이는 응답하지 않는다.
+공용 biz 계정으로 로그인해서 https://padlet.com/settings/api 에서 키 값을 복사한다. 팀 전체가 공유하는 유일한 키이니 외부 공개 채널이나 커밋에는 올리지 말 것.
 
-이 프로젝트는 회사 공용 Padlet biz 계정을 사용하며, **그 계정에는 API 키가 하나뿐**이다 (Padlet biz 플랜은 계정당 키 1개만 지원 — 개인별로 새로 발급받는 개념이 아니다). 그래서:
-
-1. 공용 biz 계정으로 로그인해서 https://padlet.com/settings/api 에서 키 값을 직접 복사한다 — 계정당 키가 하나뿐이라 새로 만드는 게 아니라 이미 있는 값을 그대로 복사하는 것. 이메일/공개 채널/이 저장소의 커밋 등에는 절대 올리지 말 것 — 팀 전체가 공유하는 유일한 키라 유출되면 전원 영향을 받는다.
-2. 복사한 키를 `~/.secrets/padlet_api_key.txt` 파일에 저장한다.
-
-   가장 쉬운 방법은 Claude Code한테 키 값을 그대로 던져주고 "이 키로 padlet_api_key.txt 만들어줘" 하고 시키는 것 — 터미널 명령어를 직접 칠 필요 없이 알아서 파일을 만들어 저장해준다.
-
-   직접 터미널에서 하고 싶다면:
-
-   Windows (PowerShell):
-   ```powershell
-   New-Item -ItemType Directory -Force -Path "$HOME\.secrets" | Out-Null
-   Set-Content -Path "$HOME\.secrets\padlet_api_key.txt" -Value "<복사한 키>" -NoNewline
-   ```
-
-   macOS / Linux:
-   ```bash
-   mkdir -p ~/.secrets
-   printf '%s' '<복사한 키>' > ~/.secrets/padlet_api_key.txt
-   ```
-
-   저장 경로를 바꾸고 싶으면 환경변수 `PADLET_API_KEY_FILE`로 다른 경로를 지정하면 된다.
-
-키가 없으면 서버 실행 시 바로 에러가 나며 어디에 저장하면 되는지 메시지로 안내한다.
+복사한 키는 Claude Code한테 그대로 던져주고 "이 키로 padlet-mcp 설정해줘"라고 하면 알아서 저장하고 연동까지 해준다.
 
 ## 3. 설치 확인 (테스트)
 
@@ -101,7 +78,7 @@ claude mcp add padlet --scope project -- python -m padlet_mcp
 
 ## 5. 문제 해결
 
-- **"Padlet API 키를 찾을 수 없습니다"** — 2단계의 환경변수/파일 설정이 안 된 것. 둘 중 하나를 다시 확인.
+- **"Padlet API 키를 찾을 수 없습니다"** — 2단계의 키 저장이 안 된 것. Claude Code한테 다시 키를 주고 설정해달라고 하면 된다.
 - **`pip install` 시 "script ... is not on PATH" 경고** — 무시해도 된다. `python -m padlet_mcp`로 실행하므로 Scripts 폴더가 PATH에 없어도 상관없다.
 - **Claude Code에서 padlet 툴이 안 보임** — `.mcp.json` 등록 후 Claude Code를 재시작해야 반영된다.
 
