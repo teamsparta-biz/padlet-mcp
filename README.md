@@ -1,6 +1,6 @@
 # padlet-mcp
 
-[Padlet REST API](https://api.padlet.dev/v1)를 감싸는 MCP 서버. Claude Code가 Padlet 보드를 읽고 쓸 수 있게 해준다.
+[Padlet REST API](https://api.padlet.dev/v1)를 감싸는 MCP 서버. Claude Code가 Padlet 보드를 읽을 수 있게 해준다. 읽기 전용 — 글쓰기/수정/삭제 툴은 없다.
 
 ## 제공 툴
 
@@ -8,9 +8,8 @@
 | --- | --- |
 | `list_boards` | 현재 API 키로 접근 가능한 보드 목록 (id, 제목, URL) |
 | `get_board` | 보드 하나의 섹션·게시물·댓글 전체 |
-| `create_post` | 보드에 새 게시물 작성 |
 
-전형적인 사용 흐름: `list_boards`로 board_id 확인 → `get_board`로 내용 조회 → (필요하면) `create_post`로 작성. padlet.com URL만 있고 board_id를 모를 때는 `list_boards`가 반환하는 `web_url`과 대조해서 찾으면 된다.
+전형적인 사용 흐름: `list_boards`로 board_id 확인 → `get_board`로 내용 조회. padlet.com URL만 있고 board_id를 모를 때는 `list_boards`가 반환하는 `web_url`과 대조해서 찾으면 된다.
 
 ## 1. 설치
 
@@ -29,7 +28,7 @@ pip install --user --upgrade git+https://github.com/teamsparta-biz/padlet-mcp
 ## 2. API 키 발급 및 설정
 
 1. https://padlet.com/settings/api 접속 (로그인 필요) → API 키 발급 화면에서 새 키 생성 → 값 복사
-   - **반드시 본인 계정으로 발급받을 것.** 공유 키를 쓰면 `create_post`로 쓴 글이 전부 키 주인 이름으로 찍힌다.
+   - 읽기 전용이라 작성자 attribution 문제는 없지만, 그래도 키는 각자 본인 계정으로 발급받을 것을 권장한다 — 그래야 특정 사람이 퇴사/키 유출 시 그 사람 키만 무효화하면 되고, `list_boards`도 본인이 실제 접근 권한 있는 보드만 정확히 보여준다.
 2. 복사한 키를 아래 둘 중 하나로 저장 (파일 방식을 권장 — 터미널을 새로 열어도 유지됨):
 
    **방법 A: 파일에 저장 (권장)**
@@ -77,7 +76,7 @@ python -c "from padlet_mcp.server import list_boards; import json; print(json.du
 npx @modelcontextprotocol/inspector python -m padlet_mcp
 ```
 
-브라우저가 열리면 `list_boards`/`get_board`/`create_post` 툴을 직접 호출해볼 수 있다.
+브라우저가 열리면 `list_boards`/`get_board` 툴을 직접 호출해볼 수 있다.
 
 ## 4. Claude Code에 등록
 

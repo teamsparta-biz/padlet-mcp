@@ -29,13 +29,11 @@ API_KEY = _load_api_key()
 mcp = FastMCP("padlet")
 
 
-def _request(method: str, path: str, params: dict | None = None, json_body: dict | None = None) -> dict:
-    resp = httpx.request(
-        method,
+def _get(path: str, params: dict | None = None) -> dict:
+    resp = httpx.get(
         f"{API_BASE}{path}",
         headers={"x-api-key": API_KEY},
         params=params,
-        json=json_body,
         timeout=30,
     )
     if resp.status_code >= 400:
@@ -51,10 +49,10 @@ def _index_included(included: list[dict] | None) -> dict:
 def list_boards() -> list[dict]:
     """현재 API 키로 접근 가능한 보드(Padlet) 목록을 반환한다.
 
-    각 보드의 id(get_board/create_post에 쓰는 16자리 식별자), 제목, 공개 URL을 담는다.
+    각 보드의 id(get_board에 쓰는 16자리 식별자), 제목, 공개 URL을 담는다.
     padlet.com URL만 알고 있을 때는 이 목록에서 web_url을 비교해 board_id를 찾는다.
     """
-    data = _request("GET", "/me", params={"include": "boards"})
+    data = _get("/me", params={"include": "boards"})
     index = _index_included(data.get("included"))
     boards = []
     for ref in data["data"]["relationships"].get("boards", {}).get("data", []):
@@ -79,7 +77,7 @@ def get_board(board_id: str) -> dict:
 
     board_id는 list_boards로 얻은 16자리 보드 ID다 (padlet.com URL의 슬러그가 아님).
     """
-    data = _request("GET", f"/boards/{board_id}", params={"include": "posts,sections,comments"})
+    data = _get(f"/boards/{board_id}", params={"include": "posts,sections,comments"})
     index = _index_included(data.get("included"))
     board = data["data"]
     attrs = board.get("attributes", {})
@@ -127,26 +125,6 @@ def get_board(board_id: str) -> dict:
         "posts": posts,
         "comments": comments,
     }
-
-
-@mcp.tool()
-def create_post(
-    board_id: str,
-    subject: str,
-    body: str = "",
-    section_id: str | None = None,
-    color: str | None = None,
-) -> dict:
-    """보드에 새 게시물을 작성한다. color는 red/orange/green/blue/purple 중 하나(선택)."""
-    attributes: dict = {"content": {"subject": subject, "body": body}}
-    if color:
-        attributes["color"] = color
-
-    payload: dict = {"data": {"type": "post", "attributes": attributes}}
-    if section_id:
-        payload["data"]["relationships"] = {"section": {"data": {"type": "section", "id": section_id}}}
-
-    return _request("POST", f"/boards/{board_id}/posts", json_body=payload)
 
 
 def main() -> None:
