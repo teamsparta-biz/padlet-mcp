@@ -25,24 +25,27 @@ pip install --user git+https://github.com/teamsparta-biz/padlet-mcp
 pip install --user --upgrade git+https://github.com/teamsparta-biz/padlet-mcp
 ```
 
-## 2. API 키 발급 및 설정
+## 2. API 키 설정
 
-1. https://padlet.com/settings/api 접속 (로그인 필요) → API 키 발급 화면에서 새 키 생성 → 값 복사
-   - 읽기 전용이라 작성자 attribution 문제는 없지만, 그래도 키는 각자 본인 계정으로 발급받을 것을 권장한다 — 그래야 특정 사람이 퇴사/키 유출 시 그 사람 키만 무효화하면 되고, `list_boards`도 본인이 실제 접근 권한 있는 보드만 정확히 보여준다.
-2. 복사한 키를 아래 둘 중 하나로 저장 (파일 방식을 권장 — 터미널을 새로 열어도 유지됨):
+읽기 전용(list_boards/get_board만 있음)이어도 API 키는 반드시 필요하다 — Padlet API는 GET 요청에도 `x-api-key` 헤더 없이는 응답하지 않는다.
+
+이 프로젝트는 회사 공용 Padlet biz 계정을 사용하며, **그 계정에는 API 키가 하나뿐**이다 (Padlet biz 플랜은 계정당 키 1개만 지원 — 개인별로 새로 발급받는 개념이 아니다). 그래서:
+
+1. 키 보유자(hahyul.kim@teamsparta.co)에게 **Slack DM 등 비공개 채널로** 키 값을 요청해서 받는다. 이메일/공개 채널/이 저장소의 커밋 등에는 절대 올리지 말 것 — 팀 전체가 공유하는 유일한 키라 유출되면 전원 영향을 받는다.
+2. 받은 키를 아래 둘 중 하나로 저장 (파일 방식을 권장 — 터미널을 새로 열어도 유지됨):
 
    **방법 A: 파일에 저장 (권장)**
 
    Windows (PowerShell):
    ```powershell
    New-Item -ItemType Directory -Force -Path "$HOME\.secrets" | Out-Null
-   Set-Content -Path "$HOME\.secrets\padlet_api_key.txt" -Value "<발급받은 키>" -NoNewline
+   Set-Content -Path "$HOME\.secrets\padlet_api_key.txt" -Value "<전달받은 키>" -NoNewline
    ```
 
    macOS / Linux:
    ```bash
    mkdir -p ~/.secrets
-   printf '%s' '<발급받은 키>' > ~/.secrets/padlet_api_key.txt
+   printf '%s' '<전달받은 키>' > ~/.secrets/padlet_api_key.txt
    ```
 
    저장 경로를 바꾸고 싶으면 환경변수 `PADLET_API_KEY_FILE`로 다른 경로를 지정하면 된다.
@@ -51,7 +54,7 @@ pip install --user --upgrade git+https://github.com/teamsparta-biz/padlet-mcp
 
    Windows (PowerShell, 현재 세션에만 적용):
    ```powershell
-   $env:PADLET_API_KEY = "<발급받은 키>"
+   $env:PADLET_API_KEY = "<전달받은 키>"
    ```
 
    영구적으로 적용하려면 [시스템 환경 변수 편집]에 `PADLET_API_KEY`를 추가하거나, macOS/Linux는 `~/.bashrc`/`~/.zshrc`에 `export PADLET_API_KEY=...`를 추가.
