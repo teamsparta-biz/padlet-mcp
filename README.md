@@ -1,15 +1,6 @@
 # padlet-mcp
 
-[Padlet REST API](https://api.padlet.dev/v1)를 감싸는 MCP 서버. Claude Code가 Padlet 보드를 읽을 수 있게 해준다. 읽기 전용 — 글쓰기/수정/삭제 툴은 없다.
-
-## 제공 툴
-
-| 툴 | 설명 |
-| --- | --- |
-| `list_boards` | 현재 API 키로 접근 가능한 보드 목록 (id, 제목, URL) |
-| `get_board` | 보드 하나의 섹션·게시물·댓글 전체 |
-
-전형적인 사용 흐름: `list_boards`로 board_id 확인 → `get_board`로 내용 조회. padlet.com URL만 있고 board_id를 모를 때는 `list_boards`가 반환하는 `web_url`과 대조해서 찾으면 된다.
+[Padlet REST API](https://api.padlet.dev/v1)를 감싸는 MCP 서버. Claude Code가 Padlet 보드를 읽을 수 있게 해준다. 읽기 전용 — 글쓰기/수정/삭제는 안 됨.
 
 ## 1. 설치
 
