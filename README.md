@@ -20,7 +20,7 @@ Padlet REST API(`https://api.padlet.dev/v1`)를 감싸는 MCP 서버. `list_boar
 프로젝트 루트에서:
 
 ```
-claude mcp add padlet --scope project -- uvx --from git+https://github.com/<org>/padlet-mcp padlet-mcp
+claude mcp add padlet --scope project -- uvx --from git+https://github.com/teamsparta-biz/padlet-mcp padlet-mcp
 ```
 
 `uvx`가 매번 이 저장소에서 패키지를 받아 실행하므로 로컬에 clone하거나 경로를 맞출 필요가 없다. 각자 자기 Padlet API 키만 위 방법으로 설정하면 된다.
